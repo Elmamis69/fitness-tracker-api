@@ -9,7 +9,7 @@ services:
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_DATABASE: fitness-tracker
+      MONGO_INITDB_DATABASE: fitness_tracker
 
   influxdb:
     image: influxdb:2.7
