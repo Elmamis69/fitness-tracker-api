@@ -197,8 +197,8 @@ Datos que se guardarán como time-series:
 - [ ] Paginación en endpoints
 - [ ] Filtros y búsqueda
 - [ ] Tests unitarios (pytest)
+- [ ] Documentación API mejorada
+
 ---
 
 **Siguiente paso:** Crea `app/schemas/exercise.py` con los schemas de Pydantic para Exercise (ExerciseCreate, ExerciseUpdate, ExerciseResponse) y marca el checkbox cuando termines.
-
-**Siguiente paso:** Crea `app/schemas/user.py` con los schemas de Pydantic para User (UserCreate, UserLogin, UserResponse) y marca el checkbox cuando termines.
