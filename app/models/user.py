@@ -1,13 +1,11 @@
 from typing import Optional
 from datetime import datetime
 from bson import ObjectId
-from passlib.context import CryptContext
+import bcrypt
 
 from app.core.database import get_database
 from app.schemas.user import UserCreate
 
-# Configuracion para hashear passwords
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserModel:
     """Model for User CRUD operations in MongoDB"""
@@ -23,12 +21,17 @@ class UserModel:
     @staticmethod
     def hash_password(password: str) -> str:
         """Hash a password using bcrypt"""
-        return pwd_context.hash(password)
+        password_bytes = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password_bytes, salt)
+        return hashed.decode('utf-8')
     
     @staticmethod
     def verify_password(plain_password: str, hashed_password: str) -> bool:
         """Verify a password against its hash"""
-        return pwd_context.verify(plain_password, hashed_password)
+        password_bytes = plain_password.encode('utf-8')
+        hashed_bytes = hashed_password.encode('utf-8')
+        return bcrypt.checkpw(password_bytes, hashed_bytes)
     
     @staticmethod
     async def create_user(user_data: UserCreate) -> dict:
