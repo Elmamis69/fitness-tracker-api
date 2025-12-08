@@ -156,7 +156,7 @@ Datos que se guardarán como time-series:
 - [x] Conexión a MongoDB
 - [x] Conexión a InfluxDB
 ### Fase 2: Sistema de Autenticación
-- [ ] Schema User (Pydantic)
+- [x] Schema User (Pydantic)
 - [ ] Modelo User (operaciones MongoDB)
 - [ ] Utilidades (hash password, create/verify JWT)
 - [ ] Rutas de autenticación (register, login)
