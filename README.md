@@ -155,14 +155,14 @@ Datos que se guardarán como time-series:
 - [x] Docker Compose (MongoDB, InfluxDB, Grafana)
 - [x] Conexión a MongoDB
 - [x] Conexión a InfluxDB
+- [x] Servidor Express básico
+
 ### Fase 2: Sistema de Autenticación
 - [x] Schema User (Pydantic)
 - [x] Modelo User (operaciones MongoDB)
 - [x] Utilidades (hash password, create/verify JWT)
 - [x] Rutas de autenticación (register, login)
 - [x] Dependency para obtener usuario actual
-- [ ] Rutas de autenticación
-- [ ] Validaciones con express-validator
 
 ### Fase 3: Gestión de Ejercicios
 - [ ] Schema Exercise (Pydantic)
@@ -197,10 +197,8 @@ Datos que se guardarán como time-series:
 - [ ] Paginación en endpoints
 - [ ] Filtros y búsqueda
 - [ ] Tests unitarios (pytest)
-- [ ] Documentación API mejorada
-
 ---
 
-**¡Empieza programando!** 🚀
+**Siguiente paso:** Crea `app/schemas/exercise.py` con los schemas de Pydantic para Exercise (ExerciseCreate, ExerciseUpdate, ExerciseResponse) y marca el checkbox cuando termines.
 
 **Siguiente paso:** Crea `app/schemas/user.py` con los schemas de Pydantic para User (UserCreate, UserLogin, UserResponse) y marca el checkbox cuando termines.
