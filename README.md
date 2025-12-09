@@ -174,7 +174,7 @@ Datos que se guardarán como time-series:
 - [x] Schema Workout (Pydantic)
 - [x] Modelo Workout (MongoDB)
 - [x] Rutas de workouts
-- [ ] Guardar métricas en InfluxDB automáticamente
+- [x] Guardar métricas en InfluxDB automáticamente
 
 ### Fase 5: Métricas y Estadísticas
 - [x] Service para InfluxDB (escribir/leer datos)
