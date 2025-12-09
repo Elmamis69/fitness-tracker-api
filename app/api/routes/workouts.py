@@ -88,8 +88,8 @@ async def update_workout(
     """
     updated_workout = await WorkoutModel.update_workout(
         workout_id,
-        workout_data,
-        str(current_user["_id"])
+        str(current_user["_id"]),
+        workout_data
     )
 
     if not updated_workout:
