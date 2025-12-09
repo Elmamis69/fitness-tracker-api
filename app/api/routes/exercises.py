@@ -37,7 +37,7 @@ async def get_user_exercises(current_user: dict = Depends(get_current_user)):
     - Requires authentication
     - Return only user's exercises
     """
-    exercises = await ExerciseModel.get_exercises_by_user(str(current_user["_id"]))
+    exercises = await ExerciseModel.get_exercise_by_user(str(current_user["_id"]))
 
     # Convertir ObjectId a string para la respuesta
     for exercise in exercises:
