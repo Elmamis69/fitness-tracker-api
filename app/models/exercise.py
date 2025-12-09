@@ -88,13 +88,13 @@ class ExerciseModel:
         
         # Construir el diccionario de actualización solo con campos provistos
         update_dict = {}
-        if exercise_data.nombre is not None:
+        if update_data.nombre is not None:
             update_dict["nombre"] = update_data.nombre
-        if exercise_data.descripcion is not None:
+        if update_data.descripcion is not None:
             update_dict["descripcion"] = update_data.descripcion
-        if exercise_data.categoria is not None:
-            update_dict["categoria"] = exercise_data.categoria.value
-        if exercise_data.tipo is not None:
+        if update_data.categoria is not None:
+            update_dict["categoria"] = update_data.categoria.value
+        if update_data.tipo is not None:
             update_dict["tipo"] = update_data.tipo.value
         
         # Si no hay nada que actualizar, retornar None
