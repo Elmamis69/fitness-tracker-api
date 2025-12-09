@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 from influxdb_client import Point
-from influxdb_client.client.query_api import SYNCHRONOUS
 
-from app.core.influxdb import get_write_api, get_query_api, get_influx_client
-from app.core.config import get_settings
+from app.core.influxdb import get_write_api, get_query_api
+from app.core.config import settings
 from app.schemas.metric import (
     BodyWeightMetric,
     WorkoutVolumeMetric,
@@ -12,8 +11,6 @@ from app.schemas.metric import (
     MetricType,
     MetricResponse
 )
-
-settings = get_settings()
 
 class MetricsService:
     """Service for writing and reading metrics from InfluxDB"""
@@ -104,7 +101,7 @@ class MetricsService:
             time_filter += '|> range(start: -30d)' # Default last 30 days
 
         # Build tag filters
-        tag_filters = '|> filter(fn: (r) => r["user_id"] == "{user_id}")'
+        tag_filters = f'|> filter(fn: (r) => r["user_id"] == "{user_id}")'
 
         if exercise_id and metric_type == MetricType.EXERCISE_MAX:
             tag_filters += f' |> filter(fn: (r) => r["exercise_id"] == "{exercise_id}")'
@@ -145,5 +142,5 @@ class MetricsService:
                         **{k: v for k, v in record.values.items() if k.startswith("exercise_") or k.startswith("workout_")}
                     }
                 ))
-                
+
         return metrics
