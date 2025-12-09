@@ -48,13 +48,13 @@ async def health_check():
 
 
 # Import and include routers
-from app.api.routes import users
+from app.api.routes import users, exercises
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(exercises.router, prefix="/api/exercises", tags=["exercises"])
 
 # Future routes
-# from app.api.routes import exercises, workouts, metrics
-# app.include_router(exercises.router, prefix="/api/exercises", tags=["exercises"])
+# from app.api.routes import workouts, metrics
 # app.include_router(workouts.router, prefix="/api/workouts", tags=["workouts"])
 # app.include_router(metrics.router, prefix="/api/metrics", tags=["metrics"])
 
