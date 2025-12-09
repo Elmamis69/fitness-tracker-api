@@ -187,9 +187,9 @@ Datos que se guardarán como time-series:
 ### Fase 6: Visualización con Grafana
 - [x] Configurar datasource de InfluxDB en Grafana
 - [x] Dashboard de peso corporal
-- [ ] Dashboard de volumen levantado
-- [ ] Dashboard de progreso por ejercicio
-- [ ] Dashboard de mediciones corporales
+- [x] Dashboard de volumen levantado
+- [x] Dashboard de progreso por ejercicio
+- [x] Dashboard de frecuencia de entrenamientos
 
 ### Fase 7: Mejoras y Optimizaciones
 - [ ] Manejo de errores centralizado
