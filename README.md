@@ -177,12 +177,12 @@ Datos que se guardarán como time-series:
 - [ ] Guardar métricas en InfluxDB automáticamente
 
 ### Fase 5: Métricas y Estadísticas
-- [ ] Service para InfluxDB (escribir/leer datos)
-- [ ] Registro de peso corporal
-- [ ] Registro de mediciones corporales
-- [ ] Cálculo de volumen total levantado
-- [ ] Endpoint de progreso por ejercicio
-- [ ] Rutas de métricas
+- [x] Service para InfluxDB (escribir/leer datos)
+- [x] Registro de peso corporal
+- [x] Registro de mediciones corporales
+- [x] Cálculo de volumen total levantado
+- [x] Endpoint de progreso por ejercicio
+- [x] Rutas de métricas
 
 ### Fase 6: Visualización con Grafana
 - [ ] Configurar datasource de InfluxDB en Grafana
