@@ -36,7 +36,7 @@ class MetricQuery(BaseModel):
     exercise_id: Optional[str] = None
     workout_id: Optional[str] = None
 
-class MetricResposne(BaseModel):
+class MetricResponse(BaseModel):
     """Schema para respuesta de métricas"""
     timestamp: datetime
     value: float
