@@ -185,8 +185,8 @@ Datos que se guardarán como time-series:
 - [x] Rutas de métricas
 
 ### Fase 6: Visualización con Grafana
-- [ ] Configurar datasource de InfluxDB en Grafana
-- [ ] Dashboard de peso corporal
+- [x] Configurar datasource de InfluxDB en Grafana
+- [x] Dashboard de peso corporal
 - [ ] Dashboard de volumen levantado
 - [ ] Dashboard de progreso por ejercicio
 - [ ] Dashboard de mediciones corporales
