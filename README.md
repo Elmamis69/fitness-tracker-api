@@ -165,13 +165,13 @@ Datos que se guardarán como time-series:
 - [x] Dependency para obtener usuario actual
 
 ### Fase 3: Gestión de Ejercicios
-- [ ] Schema Exercise (Pydantic)
-- [ ] Modelo Exercise (CRUD MongoDB)
-- [ ] Rutas de ejercicios
-- [ ] Validaciones y permisos
+- [x] Schema Exercise (Pydantic)
+- [x] Modelo Exercise (CRUD MongoDB)
+- [x] Rutas de ejercicios
+- [x] Validaciones y permisos
 
 ### Fase 4: Registro de Entrenamientos
-- [ ] Schema Workout (Pydantic)
+- [x] Schema Workout (Pydantic)
 - [ ] Modelo Workout (MongoDB)
 - [ ] Rutas de workouts
 - [ ] Guardar métricas en InfluxDB automáticamente
