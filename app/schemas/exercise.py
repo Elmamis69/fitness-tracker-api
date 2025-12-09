@@ -33,7 +33,7 @@ class ExerciseUpdate(BaseModel):
     categoria: Optional[ExerciseCategory] = None
     tipo: Optional[ExerciseType] = None
 
-class ExcerciseResponse(BaseModel):
+class ExerciseResponse(BaseModel):
     """Schema para respuestas de ejercicio"""
     id: str = Field(..., alias="_id")
     nombre: str
