@@ -64,7 +64,7 @@ async def get_workout(
 
     if not workout:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code = status.HTTP_404_NOT_FOUND,
             detail = "Workout not found"
         )
 
@@ -94,7 +94,7 @@ async def update_workout(
 
     if not updated_workout:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code = status.HTTP_404_NOT_FOUND,
             detail = "Workout not found or no changes made"
         )
 
@@ -121,7 +121,7 @@ async def delete_workout(
 
     if not deleted:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code = status.HTTP_404_NOT_FOUND,
             detail = "Workout not found"
         )
     return None
