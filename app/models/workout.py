@@ -62,6 +62,25 @@ class WorkoutModel:
         return workouts
     
     @staticmethod
+    async def get_workouts_by_user_paginated(user_id: str, skip: int = 0, limit: int = 10) -> List[dict]:
+        """
+        Get workouts created by a user with pagination
+        """
+        collection = WorkoutModel.get_collection()
+        cursor = collection.find({"user_id": user_id}).sort("fecha", -1).skip(skip).limit(limit)
+        workouts = await cursor.to_list(length = limit)
+        return workouts
+    
+    @staticmethod
+    async def count_workouts_by_user(user_id: str) -> int:
+        """
+        Count total workouts created by a user
+        """
+        collection = WorkoutModel.get_collection()
+        count = await collection.count_documents({"user_id": user_id})
+        return count
+    
+    @staticmethod
     async def get_workout_by_id(workout_id: str, user_id: str) -> Optional[dict]:
         """
         Get a workout by ID
