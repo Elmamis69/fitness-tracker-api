@@ -32,13 +32,13 @@ class PaginatedResponse(BaseModel, Generic[T]):
     @classmethod
     def create(cls, items: List[T], total: int, params: PaginationParams):
         """Factory method para crear la respuesta paginada"""
-        total_pages = ceil(total / params.page_size) if total > 0 else 0
+        total_pages = ceil(total / params.size) if total > 0 else 0
 
         return cls(
             items = items,
             total = total,
             page = params.page,
-            page_size = params.page_size,
+            page_size = params.size,
             total_pages = total_pages,
             has_next = params.page < total_pages,
             has_prev = params.page > 1,
