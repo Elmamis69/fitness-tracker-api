@@ -2,8 +2,10 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 
 from app.schemas.exercise import ExerciseCreate, ExerciseUpdate, ExerciseResponse
+from app.schemas.filters import ExerciseFilters
 from app.models.exercise import ExerciseModel
 from app.utils.auth import get_current_user
+from app.utils.pagination import PaginationParams, PaginatedResponse
 
 router = APIRouter()
 
@@ -29,21 +31,38 @@ async def create_exercise(
 
     return created_exercise
 
-@router.get("/", response_model = List[ExerciseResponse])
-async def get_user_exercises(current_user: dict = Depends(get_current_user)):
+@router.get("/", response_model = PaginatedResponse[ExerciseResponse])
+async def get_user_exercises(
+    filters: ExerciseFilters = Depends(),
+    pagination: PaginationParams = Depends(),
+    current_user: dict = Depends(get_current_user)
+):
     """
-    Get all exercises created by the authenticated user
+    Get exercises created by the authenticated user (paginated and filtered)
 
     - Requires authentication
     - Return only user's exercises
+    - Supports pagination with page and size parameters
+    - Supports filtering by search, category, and type
     """
-    exercises = await ExerciseModel.get_exercise_by_user(str(current_user["_id"]))
+    # Construir query con filtros
+    query = filters.to_mongo_query(str(current_user["_id"]))
+    
+    # Obtener total de exercises que cumplen con los filtros
+    total = await ExerciseModel.count_exercises_by_query(query)
+    
+    # Obtener exercises paginados y filtrados
+    exercises = await ExerciseModel.get_exercises_by_query(
+        query,
+        skip=pagination.skip,
+        limit=pagination.limit
+    )
 
     # Convertir ObjectId a string para la respuesta
     for exercise in exercises:
         exercise["_id"] = str(exercise["_id"])
 
-    return exercises
+    return PaginatedResponse.create(exercises, total, pagination)
 
 @router.get("/{exercise_id}", response_model = ExerciseResponse)
 async def get_exercise(

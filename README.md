@@ -195,7 +195,7 @@ Datos que se guardarán como time-series:
 - [x] Manejo de errores centralizado
 - [x] Logging (loguru o logging estándar)
 - [x] Paginación en endpoints
-- [ ] Filtros y búsqueda
+- [x] Filtros y búsqueda
 - [ ] Tests unitarios (pytest)
 - [ ] Documentación API mejorada
 

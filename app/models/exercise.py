@@ -52,6 +52,25 @@ class ExerciseModel:
         return exercises
     
     @staticmethod
+    async def get_exercises_by_query(query: dict, skip: int = 0, limit: int = 10) -> List[dict]:
+        """
+        Get exercises matching a query with pagination
+        """
+        collection = ExerciseModel.get_collection()
+        cursor = collection.find(query).skip(skip).limit(limit)
+        exercises = await cursor.to_list(length = limit)
+        return exercises
+    
+    @staticmethod
+    async def count_exercises_by_query(query: dict) -> int:
+        """
+        Count total exercises matching a query
+        """
+        collection = ExerciseModel.get_collection()
+        count = await collection.count_documents(query)
+        return count
+    
+    @staticmethod
     async def get_exercise_by_id(exercise_id: str, user_id: str) -> Optional[dict]:
         """
         Get an exercise by ID
