@@ -1,12 +1,19 @@
 """FastAPI application entry point"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from contextlib import asynccontextmanager
 
 from app.core.database import connect_to_mongo, close_mongo_connection
 from app.core.influxdb import connect_to_influxdb, close_influxdb_connection
 from app.core.config import settings
 from app.core.logger import logger
+from app.core.exceptions import (
+    http_exception_handler,
+    validation_exception_handler,
+    general_exception_handler
+)
 
 
 @asynccontextmanager
@@ -31,6 +38,11 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+
+# Exception handlers
+app.add_exception_handler(StarletteHTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, general_exception_handler)
 
 # CORS configuration
 app.add_middleware(
