@@ -81,6 +81,25 @@ class WorkoutModel:
         return count
     
     @staticmethod
+    async def get_workouts_by_query(query: dict, skip: int = 0, limit: int = 10) -> List[dict]:
+        """
+        Get workouts matching a query with pagination
+        """
+        collection = WorkoutModel.get_collection()
+        cursor = collection.find(query).sort("fecha", -1).skip(skip).limit(limit)
+        workouts = await cursor.to_list(length = limit)
+        return workouts
+    
+    @staticmethod
+    async def count_workouts_by_query(query: dict) -> int:
+        """
+        Count total workouts matching a query
+        """
+        collection = WorkoutModel.get_collection()
+        count = await collection.count_documents(query)
+        return count
+    
+    @staticmethod
     async def get_workout_by_id(workout_id: str, user_id: str) -> Optional[dict]:
         """
         Get a workout by ID
