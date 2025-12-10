@@ -4,6 +4,7 @@ from typing import List
 from app.schemas.workout import WorkoutCreate, WorkoutUpdate, WorkoutResponse
 from app.models.workout import WorkoutModel
 from app.utils.auth import get_current_user
+from app.utils.pagination import PaginationParams, PaginatedResponse
 
 router = APIRouter()
 
@@ -30,21 +31,33 @@ async def create_workout(
 
     return created_workout
 
-@router.get("/", response_model = List[WorkoutResponse])
-async def get_user_workouts(current_user: dict = Depends(get_current_user)):
+@router.get("/", response_model = PaginatedResponse[WorkoutResponse])
+async def get_user_workouts(
+    pagination: PaginationParams = Depends(),
+    current_user: dict = Depends(get_current_user)
+):
     """
-    Get all workouts created by the authenticated user
+    Get workouts created by the authenticated user (paginated)
 
     - Requires authentication
     - Returns workouts sorted by date (newest first)
+    - Supports pagination with page and page_size parameters
     """
-    workouts = await WorkoutModel.get_workouts_by_user(str(current_user["_id"]))
+    # Obtener total de workouts del usuario
+    total = await WorkoutModel.count_workouts_by_user(str(current_user["_id"]))
+    
+    # Obtener workouts paginados
+    workouts = await WorkoutModel.get_workouts_by_user_paginated(
+        str(current_user["_id"]),
+        skip=pagination.skip,
+        limit=pagination.limit
+    )
 
     # Convertir ObjectId a string para la respuesta
     for workout in workouts:
         workout["_id"] = str(workout["_id"])
 
-    return workouts
+    return PaginatedResponse.create(workouts, total, pagination)
 
 @router.get("/{workout_id}", response_model = WorkoutResponse)
 async def get_workout(
