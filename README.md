@@ -192,8 +192,8 @@ Datos que se guardarán como time-series:
 - [x] Dashboard de frecuencia de entrenamientos
 
 ### Fase 7: Mejoras y Optimizaciones
-- [ ] Manejo de errores centralizado
-- [ ] Logging (loguru o logging estándar)
+- [x] Manejo de errores centralizado
+- [x] Logging (loguru o logging estándar)
 - [ ] Paginación en endpoints
 - [ ] Filtros y búsqueda
 - [ ] Tests unitarios (pytest)
