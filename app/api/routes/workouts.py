@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 
 from app.schemas.workout import WorkoutCreate, WorkoutUpdate, WorkoutResponse
+from app.schemas.filters import WorkoutFilters
 from app.models.workout import WorkoutModel
 from app.utils.auth import get_current_user
 from app.utils.pagination import PaginationParams, PaginatedResponse
@@ -33,22 +34,27 @@ async def create_workout(
 
 @router.get("/", response_model = PaginatedResponse[WorkoutResponse])
 async def get_user_workouts(
+    filters: WorkoutFilters = Depends(),
     pagination: PaginationParams = Depends(),
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Get workouts created by the authenticated user (paginated)
+    Get workouts created by the authenticated user (paginated and filtered)
 
     - Requires authentication
     - Returns workouts sorted by date (newest first)
-    - Supports pagination with page and page_size parameters
+    - Supports pagination with page and size parameters
+    - Supports filtering by search, date range, and duration
     """
-    # Obtener total de workouts del usuario
-    total = await WorkoutModel.count_workouts_by_user(str(current_user["_id"]))
+    # Construir query con filtros
+    query = filters.to_mongo_query(str(current_user["_id"]))
     
-    # Obtener workouts paginados
-    workouts = await WorkoutModel.get_workouts_by_user_paginated(
-        str(current_user["_id"]),
+    # Obtener total de workouts que cumplen con los filtros
+    total = await WorkoutModel.count_workouts_by_query(query)
+    
+    # Obtener workouts paginados y filtrados
+    workouts = await WorkoutModel.get_workouts_by_query(
+        query,
         skip=pagination.skip,
         limit=pagination.limit
     )
