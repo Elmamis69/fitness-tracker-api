@@ -196,7 +196,7 @@ Datos que se guardarán como time-series:
 - [x] Logging (loguru o logging estándar)
 - [x] Paginación en endpoints
 - [x] Filtros y búsqueda
-- [ ] Tests unitarios (pytest)
+- [x] Tests unitarios (pytest)
 - [ ] Documentación API mejorada
 
 ---
