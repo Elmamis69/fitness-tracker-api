@@ -6,18 +6,23 @@ from contextlib import asynccontextmanager
 from app.core.database import connect_to_mongo, close_mongo_connection
 from app.core.influxdb import connect_to_influxdb, close_influxdb_connection
 from app.core.config import settings
+from app.core.logger import logger
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan events for startup and shutdown"""
     # Startup
+    logger.info("🚀 Starting Fitness Tracker API...")
     await connect_to_mongo()
     connect_to_influxdb()
+    logger.success("✅ Application started successfully")
     yield
     # Shutdown
+    logger.info("🛑 Shutting down Fitness Tracker API...")
     await close_mongo_connection()
     close_influxdb_connection()
+    logger.success("👋 Application shutdown complete")
 
 
 app = FastAPI(
