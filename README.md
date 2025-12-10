@@ -58,6 +58,13 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 El servidor estará en `http://localhost:8000`
+
+## 📖 Documentación
+
+- **API Completa**: Ver [API_DOCUMENTATION.md](API_DOCUMENTATION.md) para guía detallada
+- **Swagger UI**: http://localhost:8000/docs (documentación interactiva)
+- **ReDoc**: http://localhost:8000/redoc (documentación alternativa)
+- **Tests**: Ver [tests/README.md](tests/README.md) para ejecutar tests
 Documentación interactiva en `http://localhost:8000/docs`
 
 ## 📁 Estructura del Proyecto
@@ -197,7 +204,7 @@ Datos que se guardarán como time-series:
 - [x] Paginación en endpoints
 - [x] Filtros y búsqueda
 - [x] Tests unitarios (pytest)
-- [ ] Documentación API mejorada
+- [x] Documentación API mejorada
 
 ---
 

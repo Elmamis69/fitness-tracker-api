@@ -34,9 +34,34 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Fitness Tracker API",
-    description="API for fitness and workout tracking with MongoDB, InfluxDB, and Grafana",
+    description="""
+    ## 🏋️ Fitness Tracker API
+    
+    Complete REST API for fitness and workout tracking with time-series metrics.
+    
+    ### Features
+    - 🔐 JWT Authentication
+    - 💪 Exercise Management (CRUD)
+    - 📊 Workout Tracking with sets, reps, and weights
+    - 📈 Time-series Metrics (InfluxDB)
+    - 📉 Grafana Dashboards Integration
+    - 🔍 Advanced Filtering and Pagination
+    
+    ### Tech Stack
+    - **FastAPI** - Modern async web framework
+    - **MongoDB** - Structured data (users, exercises, workouts)
+    - **InfluxDB** - Time-series metrics (weight, volume, progress)
+    - **Grafana** - Data visualization dashboards
+    """,
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    contact={
+        "name": "Fitness Tracker API",
+        "url": "https://github.com/Elmamis69/fitness-tracker-api",
+    },
+    license_info={
+        "name": "MIT",
+    }
 )
 
 # Exception handlers

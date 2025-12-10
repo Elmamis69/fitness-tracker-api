@@ -9,16 +9,54 @@ from app.utils.pagination import PaginationParams, PaginatedResponse
 
 router = APIRouter()
 
-@router.post("/", response_model = ExerciseResponse, status_code = status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=ExerciseResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new exercise",
+    response_description="Exercise successfully created"
+)
 async def create_exercise(
     exercise_data: ExerciseCreate,
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Create a new exercise for the authenticated user
-
-    - Requires authentication
-    - Exercise is associated to the user
+    Create a new exercise definition.
+    
+    **Authentication Required**
+    
+    **Example Request:**
+    ```json
+    {
+        "nombre": "Press de Banca",
+        "descripcion": "Ejercicio compuesto para pecho",
+        "categoria": "Pecho",
+        "tipo": "Fuerza",
+        "musculos_principales": ["Pectoral Mayor", "Tríceps", "Deltoides Anterior"],
+        "musculos_secundarios": ["Core"],
+        "equipo": "Barra",
+        "dificultad": "Intermedio",
+        "instrucciones": "1. Acuéstate en el banco\n2. Agarra la barra..."
+    }
+    ```
+    
+    **Fields:**
+    - `nombre`: Exercise name (required)
+    - `descripcion`: Brief description
+    - `categoria`: Category (e.g., "Pecho", "Piernas", "Espalda")
+    - `tipo`: Type (e.g., "Fuerza", "Cardio", "Flexibilidad")
+    - `musculos_principales`: Main muscles worked
+    - `musculos_secundarios`: Secondary muscles (optional)
+    - `equipo`: Required equipment (optional)
+    - `dificultad`: Difficulty level (optional)
+    - `instrucciones`: Step-by-step instructions (optional)
+    
+    **Usage:**
+    Create exercises once, then reference them in workouts by their `_id`.
+    
+    **Errors:**
+    - `401`: Authentication required
+    - `422`: Invalid data format
     """
     # Crear el ejercicio
     created_exercise = await ExerciseModel.create_exercise(
@@ -31,19 +69,61 @@ async def create_exercise(
 
     return created_exercise
 
-@router.get("/", response_model = PaginatedResponse[ExerciseResponse])
+@router.get(
+    "/",
+    response_model=PaginatedResponse[ExerciseResponse],
+    summary="List user's exercises",
+    response_description="Paginated list of exercises"
+)
 async def get_user_exercises(
     filters: ExerciseFilters = Depends(),
     pagination: PaginationParams = Depends(),
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Get exercises created by the authenticated user (paginated and filtered)
-
-    - Requires authentication
-    - Return only user's exercises
-    - Supports pagination with page and size parameters
-    - Supports filtering by search, category, and type
+    Get paginated and filtered list of exercises.
+    
+    **Authentication Required**
+    
+    **Pagination Parameters:**
+    - `page`: Page number (default: 1)
+    - `size`: Items per page (default: 10, max: 100)
+    
+    **Filter Parameters:**
+    - `search`: Search in name, description, or muscles (case-insensitive)
+    - `categoria`: Filter by category (exact match)
+    - `tipo`: Filter by type (exact match)
+    
+    **Example Requests:**
+    ```
+    GET /api/exercises/?page=1&size=20
+    GET /api/exercises/?search=Press&categoria=Pecho
+    GET /api/exercises/?tipo=Fuerza&page=2
+    ```
+    
+    **Example Response:**
+    ```json
+    {
+        "items": [
+            {
+                "_id": "507f1f77bcf86cd799439011",
+                "nombre": "Press de Banca",
+                "categoria": "Pecho",
+                "tipo": "Fuerza",
+                "musculos_principales": ["Pectoral Mayor", "Tríceps"]
+            }
+        ],
+        "total": 15,
+        "page": 1,
+        "page_size": 20,
+        "total_pages": 1,
+        "has_next": false,
+        "has_prev": false
+    }
+    ```
+    
+    **Errors:**
+    - `401`: Authentication required
     """
     # Construir query con filtros
     query = filters.to_mongo_query(str(current_user["_id"]))

@@ -9,16 +9,59 @@ from app.utils.pagination import PaginationParams, PaginatedResponse
 
 router = APIRouter()
 
-@router.post("/", response_model = WorkoutResponse, status_code = status.HTTP_201_CREATED)
+@router.post(
+    "/",
+    response_model=WorkoutResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a new workout",
+    response_description="Workout successfully created"
+)
 async def create_workout(
     workout_data: WorkoutCreate,
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Create a new workout for the authenticated user
-
-    - Requires authentication
-    - Workout is associated to the user
+    Create a new workout session with exercises, sets, and reps.
+    
+    **Authentication Required**
+    
+    **Example Request:**
+    ```json
+    {
+        "nombre": "Día de Pecho",
+        "fecha": "2024-12-10T10:00:00",
+        "duracion": 60,
+        "notas": "Buen entrenamiento, aumenté peso en press",
+        "ejercicios": [
+            {
+                "exercise_id": "507f1f77bcf86cd799439011",
+                "sets": [
+                    {"reps": 10, "weight": 80.0, "rest_seconds": 90},
+                    {"reps": 8, "weight": 85.0, "rest_seconds": 90},
+                    {"reps": 6, "weight": 90.0, "rest_seconds": 120}
+                ]
+            }
+        ]
+    }
+    ```
+    
+    **Fields:**
+    - `nombre`: Workout name/title
+    - `fecha`: Workout date and time (ISO format)
+    - `duracion`: Duration in minutes
+    - `notas`: Optional notes
+    - `ejercicios`: Array of exercises with sets
+        - `exercise_id`: Reference to existing exercise
+        - `sets`: Array of sets with reps, weight, and rest time
+    
+    **Automatic Metrics:**
+    - Total volume (weight × reps) calculated automatically
+    - Progress tracked in InfluxDB
+    - Available in Grafana dashboards
+    
+    **Errors:**
+    - `401`: Authentication required
+    - `422`: Invalid data format
     """
 
     # Crear el workout
@@ -32,19 +75,63 @@ async def create_workout(
 
     return created_workout
 
-@router.get("/", response_model = PaginatedResponse[WorkoutResponse])
+@router.get(
+    "/",
+    response_model=PaginatedResponse[WorkoutResponse],
+    summary="List user's workouts",
+    response_description="Paginated list of workouts"
+)
 async def get_user_workouts(
     filters: WorkoutFilters = Depends(),
     pagination: PaginationParams = Depends(),
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Get workouts created by the authenticated user (paginated and filtered)
-
-    - Requires authentication
-    - Returns workouts sorted by date (newest first)
-    - Supports pagination with page and size parameters
-    - Supports filtering by search, date range, and duration
+    Get paginated and filtered list of workouts.
+    
+    **Authentication Required**
+    
+    **Pagination Parameters:**
+    - `page`: Page number (default: 1)
+    - `size`: Items per page (default: 10, max: 100)
+    
+    **Filter Parameters:**
+    - `search`: Search in workout name or notes (case-insensitive)
+    - `fecha_desde`: Filter from date (YYYY-MM-DD)
+    - `fecha_hasta`: Filter to date (YYYY-MM-DD)
+    - `duracion_min`: Minimum duration in minutes
+    - `duracion_max`: Maximum duration in minutes
+    
+    **Example Request:**
+    ```
+    GET /api/workouts/?page=1&size=10&search=Pecho&duracion_min=45
+    ```
+    
+    **Example Response:**
+    ```json
+    {
+        "items": [
+            {
+                "_id": "507f1f77bcf86cd799439011",
+                "nombre": "Día de Pecho",
+                "fecha": "2024-12-10T10:00:00",
+                "duracion": 60,
+                "ejercicios": [...]
+            }
+        ],
+        "total": 25,
+        "page": 1,
+        "page_size": 10,
+        "total_pages": 3,
+        "has_next": true,
+        "has_prev": false
+    }
+    ```
+    
+    **Sorting:** Workouts are returned sorted by date (newest first)
+    
+    **Errors:**
+    - `401`: Authentication required
     """
     # Construir query con filtros
     query = filters.to_mongo_query(str(current_user["_id"]))

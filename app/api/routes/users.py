@@ -9,15 +9,46 @@ from app.utils.auth import create_access_token, get_current_user
 router = APIRouter()
 
 
-@router.post("/register", response_model=UserResponse, status_code = status.HTTP_201_CREATED)
+@router.post(
+    "/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Register a new user",
+    response_description="User successfully created"
+)
 async def register_user(user_data: UserCreate):
     """
-    Register a new user
+    Register a new user in the system.
     
-    - Validates email doesn't exist
-    - Hashes password
-    - Creates user in MongoDB
-    - Returns user data (without password)
+    **Process:**
+    - Validates email format
+    - Checks email doesn't already exist
+    - Hashes password securely with bcrypt
+    - Creates user document in MongoDB
+    - Returns user data (password excluded)
+    
+    **Example Request:**
+    ```json
+    {
+        "email": "user@example.com",
+        "password": "SecurePass123!",
+        "name": "John Doe"
+    }
+    ```
+    
+    **Example Response:**
+    ```json
+    {
+        "_id": "507f1f77bcf86cd799439011",
+        "email": "user@example.com",
+        "name": "John Doe",
+        "created_at": "2024-12-10T10:00:00"
+    }
+    ```
+    
+    **Errors:**
+    - `400`: Email already registered
+    - `422`: Invalid input data (weak password, invalid email)
     """
     # Verificar si el email ya existe
     if await UserModel.email_exists(user_data.email):
@@ -35,13 +66,52 @@ async def register_user(user_data: UserCreate):
     return created_user
 
 
-@router.post("/login", response_model=Token)
+@router.post(
+    "/login",
+    response_model=Token,
+    summary="Login and get access token",
+    response_description="JWT access token"
+)
 async def login_user(user_credentials: UserLogin):
     """
-    Login user and return JWT token
+    Authenticate user and return JWT access token.
     
-    - Validates email and password
-    - Returns access token
+    **Process:**
+    - Validates email exists
+    - Verifies password with bcrypt
+    - Generates JWT token (valid for 7 days)
+    - Returns token and user info
+    
+    **Example Request:**
+    ```json
+    {
+        "email": "user@example.com",
+        "password": "SecurePass123!"
+    }
+    ```
+    
+    **Example Response:**
+    ```json
+    {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "token_type": "bearer",
+        "user": {
+            "_id": "507f1f77bcf86cd799439011",
+            "email": "user@example.com",
+            "name": "John Doe"
+        }
+    }
+    ```
+    
+    **Usage:**
+    Include the token in subsequent requests:
+    ```
+    Authorization: Bearer <access_token>
+    ```
+    
+    **Errors:**
+    - `401`: Invalid credentials
+    - `422`: Invalid input format
     """
     # Buscar usuario por email
     user = await UserModel.get_user_by_email(user_credentials.email)
@@ -67,12 +137,34 @@ async def login_user(user_credentials: UserLogin):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me", response_model=UserResponse)
+@router.get(
+    "/me",
+    response_model=UserResponse,
+    summary="Get current user profile",
+    response_description="Current user information"
+)
 async def get_current_user_info(current_user: dict = Depends(get_current_user)):
     """
-    Get current authenticated user information
+    Get authenticated user's profile information.
     
-    Requires authentication (Bearer token in header)
+    **Authentication Required:**
+    Include JWT token in Authorization header:
+    ```
+    Authorization: Bearer <your_access_token>
+    ```
+    
+    **Example Response:**
+    ```json
+    {
+        "_id": "507f1f77bcf86cd799439011",
+        "email": "user@example.com",
+        "name": "John Doe",
+        "created_at": "2024-12-10T10:00:00"
+    }
+    ```
+    
+    **Errors:**
+    - `401`: Missing or invalid token
     """
     # Convertir ObjectId a string
     current_user["_id"] = str(current_user["_id"])
