@@ -208,4 +208,3 @@ Datos que se guardarán como time-series:
 
 ---
 
-**Siguiente paso:** Crea `app/schemas/exercise.py` con los schemas de Pydantic para Exercise (ExerciseCreate, ExerciseUpdate, ExerciseResponse) y marca el checkbox cuando termines.
