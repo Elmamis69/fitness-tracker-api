@@ -194,7 +194,7 @@ Datos que se guardarán como time-series:
 ### Fase 7: Mejoras y Optimizaciones
 - [x] Manejo de errores centralizado
 - [x] Logging (loguru o logging estándar)
-- [ ] Paginación en endpoints
+- [x] Paginación en endpoints
 - [ ] Filtros y búsqueda
 - [ ] Tests unitarios (pytest)
 - [ ] Documentación API mejorada
